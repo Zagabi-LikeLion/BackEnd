@@ -1,6 +1,6 @@
-package org.likelion.zagabi.Value.Repository;
+package org.likelion.zagabi.domain.Value.Repository;
 
-import org.likelion.zagabi.Value.Entity.Value;
+import org.likelion.zagabi.domain.Value.Entity.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

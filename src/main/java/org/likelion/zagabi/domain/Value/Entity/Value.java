@@ -1,4 +1,4 @@
-package org.likelion.zagabi.Value.Entity;
+package org.likelion.zagabi.domain.Value.Entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

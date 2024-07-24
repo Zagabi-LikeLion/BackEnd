@@ -1,12 +1,12 @@
-package org.likelion.zagabi.Value.Service;
+package org.likelion.zagabi.domain.Value.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.likelion.zagabi.Value.Dto.request.CreateValueRequestDto;
-import org.likelion.zagabi.Value.Dto.request.UpdateValueRequestDto;
-import org.likelion.zagabi.Value.Dto.response.ValueResponseDto;
-import org.likelion.zagabi.Value.Entity.Value;
-import org.likelion.zagabi.Value.Repository.ValueRepository;
+import org.likelion.zagabi.domain.Value.Dto.request.CreateValueRequestDto;
+import org.likelion.zagabi.domain.Value.Dto.request.UpdateValueRequestDto;
+import org.likelion.zagabi.domain.Value.Dto.response.ValueResponseDto;
+import org.likelion.zagabi.domain.Value.Entity.Value;
+import org.likelion.zagabi.domain.Value.Repository.ValueRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,15 +45,15 @@ public class ValueService {
     @Transactional
     public ValueResponseDto updateValueRanking(UpdateValueRequestDto updateValueRequestDto){
         // 랭킹을 바꾸는 가치관
-        Value firstValue = valueRepository.findById(updateValueRequestDto.getValueId()).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 가치관입니다."));
+        Value firstValue = valueRepository.findById(updateValueRequestDto.valueId()).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 가치관입니다."));
         // firstValue에 의해 랭킹이 바뀌어지는 가치관
-        Value secondValue = valueRepository.findByRanking(updateValueRequestDto.getChangeRanking()).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 가치관입니다."));
+        Value secondValue = valueRepository.findByRanking(updateValueRequestDto.changeRanking()).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 가치관입니다."));
 
         //secondValue는 firstValue의 바꾸기전 랭킹으로 바뀌어짐
         secondValue.updateRanking(firstValue.getRanking());
         log.info("[Value Service] secondValue의 랭킹 ---> {}", secondValue.getRanking());
 
-        firstValue.updateRanking(updateValueRequestDto.changeRanking);
+        firstValue.updateRanking(updateValueRequestDto.changeRanking());
         log.info("[Value Service] firstValue의 랭킹 ---> {}", firstValue.getRanking());
 
 
