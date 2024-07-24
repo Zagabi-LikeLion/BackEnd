@@ -1,3 +1,20 @@
 spring:
-  application:
-    name: Zagabi
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/like_lion_4team?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: 8213
+
+
+  jpa:
+     open-in-view: true
+     hibernate:
+      ddl-auto: create
+     show-sql: true
+
+
+logging:
+   level:
+     org.hibernate.SQL: debug
+#  application:
+#    name: Zagabi
