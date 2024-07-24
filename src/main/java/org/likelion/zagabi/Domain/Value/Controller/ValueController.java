@@ -1,11 +1,11 @@
-package org.likelion.zagabi.domain.Value.Controller;
+package org.likelion.zagabi.Domain.Value.Controller;
 
 import lombok.RequiredArgsConstructor;
-import org.likelion.zagabi.domain.Value.Dto.request.CreateValueRequestDto;
-import org.likelion.zagabi.domain.Value.Dto.request.UpdateValueRequestDto;
-import org.likelion.zagabi.domain.Value.Dto.response.ValueResponseDto;
-import org.likelion.zagabi.domain.Value.Service.ValueQueryService;
-import org.likelion.zagabi.domain.Value.Service.ValueService;
+import org.likelion.zagabi.Domain.Value.Service.ValueService;
+import org.likelion.zagabi.Domain.Value.Dto.request.CreateValueRequestDto;
+import org.likelion.zagabi.Domain.Value.Dto.request.UpdateValueRequestDto;
+import org.likelion.zagabi.Domain.Value.Dto.response.ValueResponseDto;
+import org.likelion.zagabi.Domain.Value.Service.ValueQueryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

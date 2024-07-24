@@ -1,7 +1,7 @@
-package org.likelion.zagabi.domain.Value.Dto.response;
+package org.likelion.zagabi.Domain.Value.Dto.response;
 
 import lombok.Builder;
-import org.likelion.zagabi.domain.Value.Entity.Value;
+import org.likelion.zagabi.Domain.Value.Entity.Value;
 
 @Builder
 public record ValueResponseDto(

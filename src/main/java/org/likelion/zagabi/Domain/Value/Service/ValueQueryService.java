@@ -1,9 +1,9 @@
-package org.likelion.zagabi.domain.Value.Service;
+package org.likelion.zagabi.Domain.Value.Service;
 
 import lombok.RequiredArgsConstructor;
-import org.likelion.zagabi.domain.Value.Dto.response.ValueResponseDto;
-import org.likelion.zagabi.domain.Value.Entity.Value;
-import org.likelion.zagabi.domain.Value.Repository.ValueRepository;
+import org.likelion.zagabi.Domain.Value.Dto.response.ValueResponseDto;
+import org.likelion.zagabi.Domain.Value.Entity.Value;
+import org.likelion.zagabi.Domain.Value.Repository.ValueRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

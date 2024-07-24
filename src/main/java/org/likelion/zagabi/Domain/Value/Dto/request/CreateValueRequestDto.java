@@ -1,8 +1,8 @@
-package org.likelion.zagabi.domain.Value.Dto.request;
+package org.likelion.zagabi.Domain.Value.Dto.request;
 
 
 import lombok.Builder;
-import org.likelion.zagabi.domain.Value.Entity.Value;
+import org.likelion.zagabi.Domain.Value.Entity.Value;
 
 
 @Builder

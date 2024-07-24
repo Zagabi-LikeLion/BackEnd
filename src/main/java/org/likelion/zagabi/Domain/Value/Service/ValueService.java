@@ -1,17 +1,16 @@
-package org.likelion.zagabi.domain.Value.Service;
+package org.likelion.zagabi.Domain.Value.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.likelion.zagabi.domain.Value.Dto.request.CreateValueRequestDto;
-import org.likelion.zagabi.domain.Value.Dto.request.UpdateValueRequestDto;
-import org.likelion.zagabi.domain.Value.Dto.response.ValueResponseDto;
-import org.likelion.zagabi.domain.Value.Entity.Value;
-import org.likelion.zagabi.domain.Value.Repository.ValueRepository;
+import org.likelion.zagabi.Domain.Value.Dto.request.CreateValueRequestDto;
+import org.likelion.zagabi.Domain.Value.Dto.request.UpdateValueRequestDto;
+import org.likelion.zagabi.Domain.Value.Dto.response.ValueResponseDto;
+import org.likelion.zagabi.Domain.Value.Entity.Value;
+import org.likelion.zagabi.Domain.Value.Repository.ValueRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
