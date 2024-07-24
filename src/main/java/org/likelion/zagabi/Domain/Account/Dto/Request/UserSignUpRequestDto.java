@@ -25,11 +25,7 @@ public record UserSignUpRequestDto(
 
         @NotBlank(message = "[ERROR] 비밀번호 재확인 입력은 필수 입니다.")
         @Schema(description = "passwordCheck", example = "test1234!!")
-        String passwordCheck,
-
-        @NotBlank(message = "[ERROR] 비밀번호 재확인 입력은 필수 입니다.")
-        @Schema(description = "securityAnswer", example = "상명대 제1공학관")
-        String securityAnswer
+        String passwordCheck
 ) {
     public User toEntity(String encodedPw) {
         return User.builder()
