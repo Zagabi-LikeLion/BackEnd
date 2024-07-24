@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface ValueRepository extends JpaRepository<Value, Long> {
     List<Value> findAllByCategoryId(Long category_Id);
 
+    List<Value> findAllByRankingGreaterThan(Integer ranking);
     Optional<Value> findByRanking(Integer ranking);
 }

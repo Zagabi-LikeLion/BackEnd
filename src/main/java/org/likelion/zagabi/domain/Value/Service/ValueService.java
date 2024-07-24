@@ -16,10 +16,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class ValueService {
     private final ValueRepository valueRepository;
-    @Transactional
     public ValueResponseDto createValue(CreateValueRequestDto createValueRequestDto) {
         Value value = createValueRequestDto.toEntity();
         List<Value> values = valueRepository.findAllByCategoryId(value.getCategoryId());
@@ -35,14 +34,8 @@ public class ValueService {
         return ValueResponseDto.from(value);
     }
 
-    public ValueResponseDto getValue(Long valueId){
 
-        Value value = valueRepository.findById(valueId).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 가치관입니다."));
 
-        return ValueResponseDto.from(value);
-    }
-
-    @Transactional
     public ValueResponseDto updateValueRanking(UpdateValueRequestDto updateValueRequestDto){
         // 랭킹을 바꾸는 가치관
         Value firstValue = valueRepository.findById(updateValueRequestDto.valueId()).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 가치관입니다."));
@@ -57,25 +50,28 @@ public class ValueService {
         log.info("[Value Service] firstValue의 랭킹 ---> {}", firstValue.getRanking());
 
 
-        valueRepository.save(firstValue);
-        valueRepository.save(secondValue);
+//        valueRepository.save(firstValue);
+//        valueRepository.save(secondValue);
 
         return ValueResponseDto.from(firstValue);
 
     }
 
-    @Transactional
     public void deleteValue(Long valueId){
+        Value deleteValue = valueRepository.findById(valueId).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 가치관입니다."));
+        int deleteRanking = deleteValue.getRanking();
+
         valueRepository.deleteById(valueId);
+
+        // ranking이 삭제된 값의 ranking보다 높은 값들을 찾아 순위를 하나씩 올림
+        List<Value> valuesToUpdate = valueRepository.findAllByRankingGreaterThan(deleteRanking);
+        for (Value value : valuesToUpdate) {
+            value.updateRanking(value.getRanking() - 1);
+            valueRepository.save(value);
+        }
     }
 
-    public List<ValueResponseDto> getAllValue(Long categoryId){
 
-        List<Value> values = valueRepository.findAllByCategoryId(categoryId);
-        return values.stream()
-                .map(ValueResponseDto::from)
-                .collect(Collectors.toList());
-    }
 
 
 }

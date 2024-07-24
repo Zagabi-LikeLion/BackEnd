@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.likelion.zagabi.domain.Value.Dto.request.CreateValueRequestDto;
 import org.likelion.zagabi.domain.Value.Dto.request.UpdateValueRequestDto;
 import org.likelion.zagabi.domain.Value.Dto.response.ValueResponseDto;
+import org.likelion.zagabi.domain.Value.Service.ValueQueryService;
 import org.likelion.zagabi.domain.Value.Service.ValueService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 public class ValueController {
 
     private final ValueService valueService;
+    private final ValueQueryService valueQueryService;
 
     @PostMapping("")
     public ResponseEntity<?> createValue(@RequestBody CreateValueRequestDto createValueRequestDto){
@@ -26,7 +28,7 @@ public class ValueController {
 
     @GetMapping("/{valueId}")
     public ResponseEntity<?> getValue(@PathVariable Long valueId){
-        return ResponseEntity.ok(valueService.getValue(valueId));
+        return ResponseEntity.ok(valueQueryService.getValue(valueId));
     }
 
     @PatchMapping("")
@@ -42,7 +44,7 @@ public class ValueController {
 
     @GetMapping("/getAll/{categoryId}")
     public ResponseEntity<List<ValueResponseDto>> getAllValue(@PathVariable Long categoryId) {
-        List<ValueResponseDto> valueResponseDtos = valueService.getAllValue(categoryId);
+        List<ValueResponseDto> valueResponseDtos = valueQueryService.getAllValue(categoryId);
         return ResponseEntity.ok(valueResponseDtos);
     }
 
