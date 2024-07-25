@@ -21,13 +21,16 @@ public record UserSignUpRequestDto(
         @Size(min = 8, message = "[ERROR] 비밀번호는 최소 8자리 이이어야 합니다.")
         @Schema(description = "password", example = "test1234!!")
         @Pattern(regexp = "^(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*]).{8,64}$", message = "[ERROR] 비밀번호는 8자 이상, 64자 이하이며 특수문자 한 개를 포함해야 합니다.")
-        String password
+        String password,
+
+        String securityAnswer
 ) {
     public User toEntity(String encodedPw) {
         return User.builder()
                 .email(email)
                 .password(encodedPw)
                 .nickname(nickName)
+                .securityAnswer(securityAnswer)
                 .build();
     }
 }
