@@ -29,7 +29,7 @@ public record UserSignUpRequestDto(
         return User.builder()
                 .email(email)
                 .password(encodedPw)
-                .nickname(nickName)
+                .nickName(nickName)
                 .securityAnswer(securityAnswer)
                 .build();
     }

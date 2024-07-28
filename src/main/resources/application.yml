@@ -1,10 +1,14 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/like_lion_4team?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/zagabi?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
-    password: 8213
-
+    password:
+  jwt:
+    secret: "dkqorhvmekgkwlaksdltlrksdpanjfajrdmausdksehlrpTwlckask"
+    token:
+      access-expiration-time: 3600000 # Milliseconds for 1 hour
+      refresh-expiration-time: 2592000000 # Milliseconds for 30 days
 
   jpa:
      open-in-view: true
@@ -12,9 +16,11 @@ spring:
       ddl-auto: create
      show-sql: true
 
+redis:
+  host: localhost
+  port: 6379
 
 logging:
    level:
      org.hibernate.SQL: debug
-#  application:
-#    name: Zagabi
+
