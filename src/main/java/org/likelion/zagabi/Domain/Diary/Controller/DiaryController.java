@@ -49,7 +49,7 @@ public class DiaryController {
                                                          @RequestParam LocalDate date) {
         DiarySummaryDto diary = diaryQueryService.getDiaryByDay(date, userDetails.getUsername());
         return ResponseEntity.ok(diary);
-    }*/
+    }*///
 
     //일기에 제공할 질문 조회
     @GetMapping("/question")
