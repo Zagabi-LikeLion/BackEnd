@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record UserLoginRequestDto(
+public record  UserLoginRequestDto(
         @NotBlank(message = "[ERROR] 이메일 입력은 필수입니다.")
         @Schema(description = "email", example = "test1234@naver.com")
         @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "[ERROR] 이메일 형식에 맞지 않습니다.")

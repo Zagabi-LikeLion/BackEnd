@@ -3,6 +3,7 @@ package org.likelion.zagabi.Domain.Account.Entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.likelion.zagabi.Global.Common.BaseEntity;
 
 @Entity
@@ -25,7 +26,7 @@ public class User extends BaseEntity {
     private String password;
 
     @Column(name = "nickname", nullable = false, length = 20)
-    private String nickname;
+    private String nickName;
 
     @Column(name="security_answer", nullable = false)
     private String securityAnswer;
