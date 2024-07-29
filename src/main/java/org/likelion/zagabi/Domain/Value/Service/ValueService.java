@@ -2,6 +2,8 @@ package org.likelion.zagabi.Domain.Value.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.likelion.zagabi.Domain.Category.Entity.ValueCategory;
+import org.likelion.zagabi.Domain.Category.Repository.ValueCategoryRepository;
 import org.likelion.zagabi.Domain.Value.Dto.request.CreateValueRequestDto;
 import org.likelion.zagabi.Domain.Value.Dto.request.UpdateValueRequestDto;
 import org.likelion.zagabi.Domain.Value.Dto.response.ValueResponseDto;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -18,7 +21,9 @@ import java.util.List;
 @Transactional
 public class ValueService {
     private final ValueRepository valueRepository;
+    private final ValueCategoryRepository valueCategoryRepository;
     public ValueResponseDto createValue(CreateValueRequestDto createValueRequestDto) {
+        Optional<ValueCategory> valueCategory = valueCategoryRepository.findById(createValueRequestDto.category_id());
         Value value = createValueRequestDto.toEntity();
         List<Value> values = valueRepository.findAllByCategoryId(value.getCategoryId());
         int countValue = values.size()+1;
@@ -27,8 +32,7 @@ public class ValueService {
         value.setFirstRank(countValue);
 
         // Category 부분 구현이 완료되면 추가할 코드
-        // value.setCategory_name(categoryRepository.findById(value.getCategory_id()));
-
+        value.setCategory_name(valueCategory.get().getCategoryName());
         valueRepository.save(value);
         return ValueResponseDto.from(value);
     }

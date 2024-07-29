@@ -5,6 +5,8 @@ import org.likelion.zagabi.Domain.Value.Entity.Value;
 import org.likelion.zagabi.Domain.ValueChangeLog.Entity.ChangeType;
 import org.likelion.zagabi.Domain.ValueChangeLog.Entity.ValueChangeLog;
 
+import java.time.LocalDateTime;
+
 @Builder
 public record CreateValueChangeLogDto(
         ChangeType changeType,
@@ -16,6 +18,7 @@ public record CreateValueChangeLogDto(
         return ValueChangeLog.builder()
                 .changeType(changeType)
                 .changeReason(changeReason)
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 }
