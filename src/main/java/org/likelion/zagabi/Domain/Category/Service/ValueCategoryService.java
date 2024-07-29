@@ -6,6 +6,7 @@ import org.likelion.zagabi.Domain.Account.Entity.User;
 import org.likelion.zagabi.Domain.Category.Dto.Response.ValueCategoryResponseDto;
 import org.likelion.zagabi.Domain.Category.Entity.ValueCategory;
 import org.likelion.zagabi.Domain.Category.Repository.ValueCategoryRepository;
+import org.likelion.zagabi.Domain.Value.Repository.ValueRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ValueCategoryService {
 
-    //    private final ValueRepository valueRepository;
+    private final ValueRepository valueRepository;
     private final ValueCategoryRepository valueCategoryRepository;
     /*private final UserRepository userRepository;*/
 
@@ -69,7 +70,7 @@ public class ValueCategoryService {
                 .orElseThrow(()-> new RuntimeException("카테고리를 찾을 수 없습니다."));
 
         //해당 카테고리의 모든 가치관 삭제
-        //valueRepository.deleteByCategoryId(categoryId);
+        valueRepository.deleteAllByCategoryId(categoryId);
 
         //카테고리 삭제
         valueCategoryRepository.delete(valueCategory);
