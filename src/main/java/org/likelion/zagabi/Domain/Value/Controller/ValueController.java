@@ -8,6 +8,8 @@ import org.likelion.zagabi.Domain.Value.Dto.response.ValueResponseDto;
 import org.likelion.zagabi.Domain.Value.Service.ValueQueryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,29 +23,29 @@ public class ValueController {
     private final ValueQueryService valueQueryService;
 
     @PostMapping("")
-    public ResponseEntity<?> createValue(@RequestBody CreateValueRequestDto createValueRequestDto){
+    public ResponseEntity<?> createValue(@AuthenticationPrincipal UserDetails userDetails, @RequestBody CreateValueRequestDto createValueRequestDto){
         ValueResponseDto valueResponseDto = valueService.createValue(createValueRequestDto);
         return new ResponseEntity<>(valueResponseDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/{valueId}")
-    public ResponseEntity<?> getValue(@PathVariable Long valueId){
+    public ResponseEntity<?> getValue(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long valueId){
         return ResponseEntity.ok(valueQueryService.getValue(valueId));
     }
 
     @PatchMapping("")
-    public ResponseEntity<?> updateRanking(@RequestBody UpdateValueRequestDto updateValueRequestDto){
+    public ResponseEntity<?> updateRanking(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UpdateValueRequestDto updateValueRequestDto){
         return ResponseEntity.ok(valueService.updateValueRanking(updateValueRequestDto));
     }
 
     @DeleteMapping("/{valueId}")
-    public ResponseEntity<Void> deleteValue(@PathVariable Long valueId){
+    public ResponseEntity<Void> deleteValue(@AuthenticationPrincipal UserDetails userDetails,@PathVariable Long valueId){
         valueService.deleteValue(valueId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/getAll/{categoryId}")
-    public ResponseEntity<List<ValueResponseDto>> getAllValue(@PathVariable Long categoryId) {
+    public ResponseEntity<List<ValueResponseDto>> getAllValue(@AuthenticationPrincipal UserDetails userDetails,@PathVariable Long categoryId) {
         List<ValueResponseDto> valueResponseDtos = valueQueryService.getAllValue(categoryId);
         return ResponseEntity.ok(valueResponseDtos);
     }

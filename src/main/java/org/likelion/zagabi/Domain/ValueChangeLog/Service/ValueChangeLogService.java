@@ -3,6 +3,8 @@ package org.likelion.zagabi.Domain.ValueChangeLog.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.likelion.zagabi.Domain.Account.Entity.User;
+import org.likelion.zagabi.Domain.Account.Repository.UserJpaRepository;
 import org.likelion.zagabi.Domain.Category.Entity.ValueCategory;
 import org.likelion.zagabi.Domain.Category.Repository.ValueCategoryRepository;
 import org.likelion.zagabi.Domain.Value.Dto.request.CreateValueRequestDto;
@@ -29,15 +31,15 @@ public class ValueChangeLogService {
     private final ValueRepository valueRepository;
     private final ValueChangeLogRepository valueChangeLogRepository;
     private final ValueCategoryRepository valueCategoryRepository;
-
-    public ValueChangeLogResponseDto createValueChangeLog (/*String Email*/CreateValueChangeLogDto createValueChangeLogDto) {
+    private final UserJpaRepository userJpaRepository;
+    public ValueChangeLogResponseDto createValueChangeLog (String email, CreateValueChangeLogDto createValueChangeLogDto) {
 
         ValueChangeLog valueChangeLog = createValueChangeLogDto.toEntity();
-        /*//이메일로 유저 조회
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다"));*/
 
-//        valueChangeLog.setUser(user);
+        User user = userJpaRepository.findByEmail(email)
+                .orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다"));
+
+        valueChangeLog.setUser(user);
 
         if (valueChangeLog.getChangeType() == ChangeType.Add_Category) {
             if(createValueChangeLogDto.category_id() == null) {

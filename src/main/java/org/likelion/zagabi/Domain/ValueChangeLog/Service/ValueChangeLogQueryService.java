@@ -1,6 +1,8 @@
 package org.likelion.zagabi.Domain.ValueChangeLog.Service;
 
 import lombok.RequiredArgsConstructor;
+import org.likelion.zagabi.Domain.Account.Entity.User;
+import org.likelion.zagabi.Domain.Account.Repository.UserJpaRepository;
 import org.likelion.zagabi.Domain.Value.Dto.response.ValueResponseDto;
 import org.likelion.zagabi.Domain.Value.Entity.Value;
 import org.likelion.zagabi.Domain.ValueChangeLog.Dto.response.ValueChangeLogResponseDto;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class ValueChangeLogQueryService {
     private final ValueChangeLogRepository valueChangeLogRepository;
+    private final UserJpaRepository userJpaRepository;
     public ValueChangeLogResponseDto getValueChangeLog(Long valueChangeLogId){
 
         ValueChangeLog valueChangeLog = valueChangeLogRepository.findById(valueChangeLogId).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 가치관 변화 기록입니다."));
@@ -25,9 +28,11 @@ public class ValueChangeLogQueryService {
     }
 
 
-    public List<ValueChangeLogResponseDto> getAllValueChangeLog(Long userId){
+    public List<ValueChangeLogResponseDto> getAllValueChangeLog(String email){
+        User user = userJpaRepository.findByEmail(email)
+                .orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다"));
 
-        List<ValueChangeLog> valueChangeLogs = valueChangeLogRepository.findAllByUserId(userId);
+        List<ValueChangeLog> valueChangeLogs = valueChangeLogRepository.findAllByUserId(user.getId());
         return valueChangeLogs.stream()
                 .map(ValueChangeLogResponseDto::from)
                 .collect(Collectors.toList());
