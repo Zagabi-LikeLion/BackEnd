@@ -44,3 +44,4 @@ application.yml
 
 #question sql files
 securityQuestions.sql
+diaryQuestions.sql
