@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.likelion.zagabi.Domain.Category.Entity.ValueCategory;
 import org.likelion.zagabi.Domain.ValueChangeLog.Entity.ValueChangeLog;
 
 import java.util.List;
@@ -35,6 +36,8 @@ public class Value {
     @OneToMany(mappedBy = "value", cascade = CascadeType.ALL)
     private List<ValueChangeLog> valueChangeLogList;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ValueCategory valueCategory;
 
     public void setFirstRank(int firstRank){
         ranking = firstRank;
@@ -47,6 +50,7 @@ public class Value {
     public void setCategory_name(String categoryName){
         category_name = categoryName;
     }
+
 
 
 }

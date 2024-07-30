@@ -13,4 +13,7 @@ public interface ValueRepository extends JpaRepository<Value, Long> {
 
     List<Value> findAllByRankingGreaterThan(Integer ranking);
     Optional<Value> findByRanking(Integer ranking);
+
+    //특정 카테고리에 속하는 모든 가치를 삭제하는 메서드
+    void deleteAllByCategoryId(Long categoryId);
 }

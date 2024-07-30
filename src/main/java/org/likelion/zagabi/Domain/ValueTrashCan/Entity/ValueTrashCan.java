@@ -23,7 +23,6 @@ public class ValueTrashCan {
     private String value_title;
 
 
-    //User쪽 구현 완성되면 추가할 코드
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
