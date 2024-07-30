@@ -22,9 +22,9 @@ public class Diary extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "question_id")
@@ -53,10 +53,5 @@ public class Diary extends BaseEntity {
         this.mood = updateDiaryRequestDto.mood();
         this.impression = updateDiaryRequestDto.impression();
         this.answer = updateDiaryRequestDto.answer();
-    }
-
-    //질문 설정 메서드 추가
-    public void setQuestion(DiaryQuestion question) {
-        this.question = question;
     }
 }

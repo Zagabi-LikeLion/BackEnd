@@ -13,14 +13,14 @@ public record UpdateDiaryRequestDto(
         String impression,
         String answer
 ) {
-    public Diary toEntity(/*User user*/) {
+    public Diary toEntity(User user) {
         return Diary.builder()
                 .title(title)
                 .mainText(mainText)
                 .mood(mood)
                 .impression(impression)
                 .answer(answer)
-//                .user(user)
+                .user(user)
                 .build();
     }
 }
