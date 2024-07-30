@@ -3,7 +3,6 @@ package org.likelion.zagabi.Domain.Account.Entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.likelion.zagabi.Global.Common.BaseEntity;
 
 @Entity
@@ -31,9 +30,6 @@ public class User extends BaseEntity {
     @Column(name="security_answer", nullable = false)
     private String securityAnswer;
 
-    @Column(name = "is_admin", nullable = false)
-    @ColumnDefault("false")
-    private Boolean isAdmin = false;
 
     public void updatePassword(String pw) {
         password = pw;
