@@ -5,16 +5,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.likelion.zagabi.Domain.Account.Dto.Request.*;
+import org.likelion.zagabi.Domain.Account.Dto.Response.SecurityQuestionResponseDto;
 import org.likelion.zagabi.Domain.Account.Dto.Response.UserLoginResponseDto;
 import org.likelion.zagabi.Domain.Account.Dto.Response.UserSignUpResponseDto;
 import org.likelion.zagabi.Domain.Account.Jwt.Dto.JwtDto;
 import org.likelion.zagabi.Domain.Account.Jwt.Exception.SecurityCustomException;
 import org.likelion.zagabi.Domain.Account.Jwt.Exception.TokenErrorCode;
 import org.likelion.zagabi.Domain.Account.Jwt.Util.JwtProvider;
+import org.likelion.zagabi.Domain.Account.Service.AccountQueryService;
 import org.likelion.zagabi.Domain.Account.Service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,6 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
+    private final AccountQueryService accountQueryService;
     private final JwtProvider jwtProvider;
 
     @PostMapping("/login")
@@ -77,5 +81,10 @@ public class AccountController {
         } catch (IllegalArgumentException iae) {
             throw new SecurityCustomException(TokenErrorCode.INVALID_TOKEN, iae);
         }
+    }
+
+    public ResponseEntity<List<SecurityQuestionResponseDto>> getDiaryQuestions() {
+        List<SecurityQuestionResponseDto> responseDtos = accountQueryService.getSecurityQuestions();
+        return ResponseEntity.ok(responseDtos);
     }
 }
