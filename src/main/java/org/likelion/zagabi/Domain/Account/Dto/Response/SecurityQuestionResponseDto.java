@@ -2,8 +2,6 @@ package org.likelion.zagabi.Domain.Account.Dto.Response;
 
 import lombok.Builder;
 import org.likelion.zagabi.Domain.Account.Entity.SecurityQuestion;
-import org.likelion.zagabi.Domain.Diary.Dto.Response.DiaryQuestionResponseDto;
-import org.likelion.zagabi.Domain.Diary.Entity.DiaryQuestion;
 
 import java.util.List;
 import java.util.stream.Collectors;

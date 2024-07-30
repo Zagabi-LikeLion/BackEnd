@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.likelion.zagabi.Domain.Account.Dto.Response.SecurityQuestionResponseDto;
 import org.likelion.zagabi.Domain.Account.Entity.SecurityQuestion;
 import org.likelion.zagabi.Domain.Account.Repository.SecurityQuestionRepository;
-import org.likelion.zagabi.Domain.Diary.Dto.Response.DiaryQuestionResponseDto;
-import org.likelion.zagabi.Domain.Diary.Entity.DiaryQuestion;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

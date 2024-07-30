@@ -83,7 +83,8 @@ public class AccountController {
         }
     }
 
-    public ResponseEntity<List<SecurityQuestionResponseDto>> getDiaryQuestions() {
+    @GetMapping("/questions")
+    public ResponseEntity<List<SecurityQuestionResponseDto>> getSecurityQuestions() {
         List<SecurityQuestionResponseDto> responseDtos = accountQueryService.getSecurityQuestions();
         return ResponseEntity.ok(responseDtos);
     }
