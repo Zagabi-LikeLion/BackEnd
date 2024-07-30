@@ -13,20 +13,19 @@ public record ValueChangeLogResponseDto(
         String changeType,
         String changeReason,
 
-//      Category category
-        Value value,
+        String valueTitle,
+        String categoryName,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt,
         Integer ranking
 ) {
     public static ValueChangeLogResponseDto from(ValueChangeLog valueChangeLog){
         return ValueChangeLogResponseDto.builder()
                 .id(valueChangeLog.getId())
+                .changeType(String.valueOf(valueChangeLog.getChangeType()))
                 .changeReason(valueChangeLog.getChangeReason())
-//                .categoryId()
-                .value(valueChangeLog.getValue())
+                .valueTitle(valueChangeLog.getValueTitle())
+                .categoryName(valueChangeLog.getCategoryName())
                 .createdAt(valueChangeLog.getCreatedAt())
-                .updatedAt(valueChangeLog.getUpdatedAt())
                 .ranking(valueChangeLog.getRanking())
                 .build();
     }

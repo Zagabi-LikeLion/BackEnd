@@ -36,20 +36,23 @@ public class ValueChangeLog extends BaseEntity {
     @Column
     private Integer Ranking;
 
-//    카테고리 구현 완성되면 추가할 코드
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "category_id")
-//    private Category category;
+    @Column
+    private String categoryName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    @Column
+    private String valueTitle;
 
-//    public void setCategory(Category category){
-//        category=category
-//    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
 
     public void setValue(Value whatValue) {
         value = whatValue;
@@ -59,7 +62,11 @@ public class ValueChangeLog extends BaseEntity {
         Ranking = whatRanking;
     }
 
-    public void setCreatedAt(LocalDateTime whatCreatedAt){
-        createdAt = whatCreatedAt;
+    public void setCategoryName(String categoryName){
+        this.categoryName = categoryName;
+    }
+
+    public void setValueTitle(String valueTitle) {
+        this.valueTitle = valueTitle;
     }
 }
