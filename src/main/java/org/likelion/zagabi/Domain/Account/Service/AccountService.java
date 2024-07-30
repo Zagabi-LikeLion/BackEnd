@@ -6,11 +6,13 @@ import lombok.RequiredArgsConstructor;
 import org.likelion.zagabi.Domain.Account.Dto.Request.*;
 import org.likelion.zagabi.Domain.Account.Dto.Response.UserLoginResponseDto;
 import org.likelion.zagabi.Domain.Account.Dto.Response.UserSignUpResponseDto;
+import org.likelion.zagabi.Domain.Account.Entity.SecurityQuestion;
 import org.likelion.zagabi.Domain.Account.Entity.User;
 import org.likelion.zagabi.Domain.Account.Jwt.Exception.SecurityCustomException;
 import org.likelion.zagabi.Domain.Account.Jwt.Exception.TokenErrorCode;
 import org.likelion.zagabi.Domain.Account.Jwt.UserDetails.CustomUserDetails;
 import org.likelion.zagabi.Domain.Account.Jwt.Util.JwtProvider;
+import org.likelion.zagabi.Domain.Account.Repository.SecurityQuestionRepository;
 import org.likelion.zagabi.Domain.Account.Repository.UserJpaRepository;
 import org.likelion.zagabi.Global.Util.RedisUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AccountService {
     private final UserJpaRepository userJpaRepository;
+    private final SecurityQuestionRepository securityQuestionRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RedisUtil redisUtil;
@@ -50,8 +53,12 @@ public class AccountService {
             throw new IllegalArgumentException("해당 이메일이 존재합니다.");
         }
 
+        // 보안 질문 확인
+        SecurityQuestion securityQuestion = securityQuestionRepository.findById(requestDto.securityQuestionId())
+                .orElseThrow(() -> new IllegalArgumentException("보안 질문을 찾을 수 없습니다."));
+
         String encodedPw = passwordEncoder.encode(requestDto.password());
-        User user = requestDto.toEntity(encodedPw);
+        User user = requestDto.toEntity(encodedPw, securityQuestion);
 
         return UserSignUpResponseDto.from(userJpaRepository.save(user));
     }
@@ -85,16 +92,7 @@ public class AccountService {
             throw new IllegalArgumentException("입력하신 질문에 대답이 일치하지 않습니다.");
         }
     }
-    //    public void updatePassword(HttpServletRequest request, ChangePwRequestDto requestDto, User user) {
-//        if (!passwordEncoder.matches(requestDto.password(), user.getPassword())) {
-//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-//        }
-//        if (requestDto.password().equals(requestDto.newPassword())) {
-//            throw new IllegalArgumentException("같은 비밀번호를 사용할 수 없습니다.");
-//        }
-//        user.updatePassword(passwordEncoder.encode(requestDto.newPassword()));
-//        logout(request); // 사용자를 로그아웃합니다.
-//    }
+
     public void updatePassword(HttpServletRequest request, ChangePwRequestDto requestDto) {
         String accessToken = jwtProvider.resolveAccessToken(request);
         String userEmail = jwtProvider.getUserEmail(accessToken);
@@ -140,8 +138,6 @@ public class AccountService {
 
             // 닉네임 변경
             user.updateNickname(requestDto.newNickName());
-// 메서드가 트랜잭션으로 묶여있으면 트랜잭션 종료 시 변경된 영속성 객체를 자동으로 감지(더티체킹)하여 DB에 commit됨.
-//            userJpaRepository.save(user);
 
         } catch (ExpiredJwtException e) {
             throw new SecurityCustomException(TokenErrorCode.TOKEN_EXPIRED);

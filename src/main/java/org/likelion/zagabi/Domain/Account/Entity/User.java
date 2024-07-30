@@ -27,8 +27,13 @@ public class User extends BaseEntity {
     @Column(name = "nickname", nullable = false, length = 20)
     private String nickName;
 
+
     @Column(name="security_answer", nullable = false)
     private String securityAnswer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "security_question_id")
+    private SecurityQuestion securityQuestion;
 
 
     public void updatePassword(String pw) {

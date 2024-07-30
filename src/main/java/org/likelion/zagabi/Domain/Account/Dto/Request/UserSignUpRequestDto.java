@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.likelion.zagabi.Domain.Account.Entity.SecurityQuestion;
 import org.likelion.zagabi.Domain.Account.Entity.User;
 
 public record UserSignUpRequestDto(
@@ -22,14 +23,16 @@ public record UserSignUpRequestDto(
         @Schema(description = "password", example = "test1234!!")
         @Pattern(regexp = "^(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*]).{8,64}$", message = "[ERROR] 비밀번호는 8자 이상, 64자 이하이며 특수문자 한 개를 포함해야 합니다.")
         String password,
+        Long securityQuestionId,
 
         String securityAnswer
 ) {
-    public User toEntity(String encodedPw) {
+    public User toEntity(String encodedPw, SecurityQuestion securityQuestion) {
         return User.builder()
                 .email(email)
                 .password(encodedPw)
                 .nickName(nickName)
+                .securityQuestion(securityQuestion)
                 .securityAnswer(securityAnswer)
                 .build();
     }
