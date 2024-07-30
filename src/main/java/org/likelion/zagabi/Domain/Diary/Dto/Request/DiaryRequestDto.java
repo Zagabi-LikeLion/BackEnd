@@ -15,7 +15,7 @@ public record DiaryRequestDto (
         String answer,
         Long questionId
 ) {
-    public Diary toEntity(/*User user,*/ DiaryQuestion question) {
+    public Diary toEntity(User user, DiaryQuestion question) {
         return Diary.builder()
                 .title(title)
                 .mainText(mainText)
@@ -23,7 +23,7 @@ public record DiaryRequestDto (
                 .impression(impression)
                 .answer(answer)
                 .question(question)
-//                .user(user)
+                .user(user)
                 .build();
     }
 }
