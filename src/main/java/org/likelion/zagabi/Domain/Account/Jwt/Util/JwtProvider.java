@@ -78,7 +78,7 @@ public class JwtProvider {
                 .compact();
 
         redisUtil.save(
-                customUserDetails.getUsername(),
+                customUserDetails.getUsername() + ":refresh",
                 refreshToken,
                 refreshExpMs,
                 TimeUnit.MILLISECONDS
@@ -93,14 +93,36 @@ public class JwtProvider {
 
 
     public boolean validateRefreshToken(String refreshToken) {
-        // refreshToken validate
-        String username = getUserEmail(refreshToken);
+        try {
+            String username = getUserEmail(refreshToken);
 
-        //redis 확인
-        if (!redisUtil.hasKey(username)) {
+            // 블랙리스트에 있는지 확인
+            if (redisUtil.hasKey("blacklist:" + refreshToken)) {
+                throw new SecurityCustomException(TokenErrorCode.INVALID_TOKEN);
+            }
+
+            // redis에서 사용자 이름으로 저장된 토큰이 있는지 확인
+            if (!redisUtil.hasKey(username + ":refresh")) {
+                throw new SecurityCustomException(TokenErrorCode.INVALID_TOKEN);
+            }
+            return true;
+        } catch (Exception e) {
             throw new SecurityCustomException(TokenErrorCode.INVALID_TOKEN);
         }
-        return true;
+    }
+
+    public String resolveRefreshToken(HttpServletRequest request) {
+        String authorization = request.getHeader("RefreshToken");
+        if (authorization == null || authorization.isEmpty()) {
+            log.warn("[*] No Refresh Token in req");
+            return null;
+        }
+        return authorization;
+    }
+
+    public Long getRefreshExpTime(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration()
+                .getTime();
     }
 
     public String resolveAccessToken(HttpServletRequest request) {
@@ -127,13 +149,10 @@ public class JwtProvider {
                 .get("email", String.class);
     }
 
-    public JwtDto reissueToken(String refreshToken) throws SignatureException {
+    public String reissueToken(String refreshToken) throws SignatureException {
         UserDetails userDetails = customUserDetailService.loadUserByUsername(getUserEmail(refreshToken));
 
-        return new JwtDto(
-                createJwtAccessToken((CustomUserDetails)userDetails),
-                createJwtRefreshToken((CustomUserDetails)userDetails)
-        );
+        return createJwtAccessToken((CustomUserDetails)userDetails);
     }
 
     public Long getExpTime(String token) {
