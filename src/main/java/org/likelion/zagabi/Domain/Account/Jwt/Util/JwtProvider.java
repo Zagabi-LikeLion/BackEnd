@@ -10,6 +10,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Component
 public class JwtProvider {
@@ -45,18 +48,35 @@ public class JwtProvider {
     }
 
     // Jwt 생성
+//    public String createJwtAccessToken(CustomUserDetails customUserDetails) {
+//        Instant issuedAt = Instant.now();
+//        Instant expiration = issuedAt.plusMillis(accessExpMs);
+//
+//        return Jwts.builder()
+//                .header()
+//                .add("alg", "HS256")
+//                .add("typ", "JWT")
+//                .and()
+//                .claim("email", customUserDetails.getUsername())
+//                .claims("is_admin", customUserDetails.getAuthorities())
+//                .issuedAt(Date.from(issuedAt))
+//                .expiration(Date.from(expiration))
+//                .signWith(secretKey)
+//                .compact();
+//    }
     public String createJwtAccessToken(CustomUserDetails customUserDetails) {
         Instant issuedAt = Instant.now();
         Instant expiration = issuedAt.plusMillis(accessExpMs);
 
         return Jwts.builder()
-                .header()
-                .add("alg", "HS256")
-                .add("typ", "JWT")
-                .and()
+                .setHeaderParam("alg", "HS256")
+                .setHeaderParam("typ", "JWT")
                 .claim("email", customUserDetails.getUsername())
-                .issuedAt(Date.from(issuedAt))
-                .expiration(Date.from(expiration))
+                .claim("is_admin", customUserDetails.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .toList().contains("ROLE_ADMIN"))
+                .setIssuedAt(Date.from(issuedAt))
+                .setExpiration(Date.from(expiration))
                 .signWith(secretKey)
                 .compact();
     }
@@ -126,12 +146,13 @@ public class JwtProvider {
                 .get("email", String.class);
     }
 
-    public Boolean isStaff(String token) throws SignatureException {
+    public Boolean isAdmin(String token) throws SignatureException {
         return (Boolean) Jwts.parser()
                 .verifyWith(secretKey).build()
                 .parseSignedClaims(token)
-                .getPayload().get("is_staff");
+                .getPayload().get("is_admin");
     }
+
 
     public JwtDto reissueToken(String refreshToken) throws SignatureException {
         UserDetails userDetails = customUserDetailService.loadUserByUsername(getUserEmail(refreshToken));

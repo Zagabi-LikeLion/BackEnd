@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.likelion.zagabi.Domain.Account.Entity.User;
 
 @Getter
 @Entity
@@ -22,14 +23,13 @@ public class ValueTrashCan {
     private String value_title;
 
 
-//    User쪽 구현 완성되면 추가할 코드
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private User user
+    //User쪽 구현 완성되면 추가할 코드
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
-
-//    public void setUser(User user){
-//        this.user = user;
-//    }
+    public void setUser(User user){
+        this.user = user;
+    }
     public void setValue_title(String valueTitle){
         value_title = valueTitle;
     }

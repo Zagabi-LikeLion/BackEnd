@@ -31,4 +31,16 @@ public class User extends BaseEntity {
     @Column(name="security_answer", nullable = false)
     private String securityAnswer;
 
+    @Column(name = "is_admin", nullable = false)
+    @ColumnDefault("false")
+    private Boolean isAdmin = false;
+
+    public void updatePassword(String pw) {
+        password = pw;
+    }
+    public void updateNickname(String newNickname) {
+        this.nickName = newNickname;
+    }
+
+
 }

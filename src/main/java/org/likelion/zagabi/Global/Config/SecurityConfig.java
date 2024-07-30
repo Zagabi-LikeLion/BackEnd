@@ -30,8 +30,7 @@ import java.util.stream.Stream;
 public class SecurityConfig {
 
     private final String[] swaggerUrls = {"/swagger-ui/**", "/v3/**"};
-    private final String[] authUrls = {"/", "/accounts/signup/**", "/accounts/login/**",
-            "/api/v1/auth", "/accounts/reissue/**", "/accounts/forgotPw/**", "/accounts/email/verify"};
+    private final String[] authUrls = {"/account/signup/**", "/account/login/**"};
     private final String[] allowedUrls = Stream.concat(Arrays.stream(swaggerUrls), Arrays.stream(authUrls))
             .toArray(String[]::new);
 
@@ -69,18 +68,16 @@ public class SecurityConfig {
         http
                 .httpBasic(AbstractHttpConfigurer::disable);
 
+        // JWT 필터 추가
         http
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, redisUtil), UsernamePasswordAuthenticationFilter.class);
-
-        http
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, redisUtil), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
 
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(allowedUrls).permitAll()
-                        .requestMatchers("/**").authenticated()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 );
 
         // 예외 처리
