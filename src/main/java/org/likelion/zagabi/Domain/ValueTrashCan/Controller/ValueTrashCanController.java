@@ -8,6 +8,8 @@ import org.likelion.zagabi.Domain.ValueTrashCan.Service.ValueTrashCanQueryServic
 import org.likelion.zagabi.Domain.ValueTrashCan.Service.ValueTrashCanService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,19 +22,19 @@ public class ValueTrashCanController {
     private final ValueTrashCanQueryService valueTrashCanQueryService;
 
     @PostMapping("")
-    public ResponseEntity<?> createValueTrashCan(@RequestBody CreateValueTrashCanRequestDto createValueTrashCanRequestDto){
-        ValueTrashCanResponseDto valueTrashCanResponseDto = valueTrashCanService.createValueTrashCan(createValueTrashCanRequestDto);
+    public ResponseEntity<?> createValueTrashCan(@AuthenticationPrincipal UserDetails userDetails, @RequestBody CreateValueTrashCanRequestDto createValueTrashCanRequestDto){
+        ValueTrashCanResponseDto valueTrashCanResponseDto = valueTrashCanService.createValueTrashCan(userDetails.getUsername(), createValueTrashCanRequestDto);
         return new ResponseEntity<>(valueTrashCanResponseDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/{valueTrashCanId}")
-    public ResponseEntity<?> getValueTrashCan(@PathVariable Long valueTrashCanId){
+    public ResponseEntity<?> getValueTrashCan(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long valueTrashCanId){
         return ResponseEntity.ok(valueTrashCanQueryService.getValueTrashCan(valueTrashCanId));
     }
 
-    @GetMapping("/getAll/{userId}")
-    public ResponseEntity<List<ValueTrashCanResponseDto>> getAllValueTrashCan(@PathVariable Long userId) {
-        List<ValueTrashCanResponseDto> valueTrashCanResponseDtos = valueTrashCanQueryService.getAllValueTrashCan(userId);
+    @GetMapping("/getAll")
+    public ResponseEntity<List<ValueTrashCanResponseDto>> getAllValueTrashCan(@AuthenticationPrincipal UserDetails userDetails) {
+        List<ValueTrashCanResponseDto> valueTrashCanResponseDtos = valueTrashCanQueryService.getAllValueTrashCan(userDetails.getUsername());
         return ResponseEntity.ok(valueTrashCanResponseDtos);
     }
 }

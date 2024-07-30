@@ -2,6 +2,8 @@ package org.likelion.zagabi.Domain.ValueTrashCan.Service;
 
 
 
+import org.likelion.zagabi.Domain.Account.Entity.User;
+import org.likelion.zagabi.Domain.Account.Repository.UserJpaRepository;
 import org.likelion.zagabi.Domain.Value.Entity.Value;
 import org.likelion.zagabi.Domain.Value.Repository.ValueRepository;
 import org.likelion.zagabi.Domain.ValueTrashCan.Dto.request.CreateValueTrashCanRequestDto;
@@ -22,23 +24,31 @@ import java.util.Optional;
 public class ValueTrashCanService {
     private final ValueTrashCanRepository valueTrashCanRepository;
     private final ValueRepository valueRepository;
+    private final UserJpaRepository userJpaRepository;
+
+    public ValueTrashCanResponseDto createValueTrashCan(String email, CreateValueTrashCanRequestDto createValueTrashCanRequestDto) {
 
 
-    public ValueTrashCanResponseDto createValueTrashCan(CreateValueTrashCanRequestDto createValueTrashCanRequestDto) {
-
-//      인증 인가가 구현이 된다면 추가할 코드
-//      User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+     User user = userJpaRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
 
         Optional<Value> value = Optional.ofNullable(valueRepository.findById(createValueTrashCanRequestDto.valueId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 가치관입니다.")));
         ValueTrashCan valueTrashCan = createValueTrashCanRequestDto.toEntity();
 
         valueTrashCan.setValue_title(value.get().getValue_title());
-//      valueTrashCan.setUser(user);
+        valueTrashCan.setUser(user);
         valueTrashCanRepository.save(valueTrashCan);
 
-        //가치관 휴지통에 이동한 후 가치관 삭제
+        int deleteRanking = value.get().getRanking();
+
         valueRepository.deleteById(createValueTrashCanRequestDto.valueId());
+
+        // ranking이 삭제된 값의 ranking보다 높은 값들을 찾아 순위를 하나씩 올림
+        List<Value> valuesToUpdate = valueRepository.findAllByRankingGreaterThan(deleteRanking);
+        for (Value whatValue : valuesToUpdate) {
+            whatValue.updateRanking(whatValue.getRanking() - 1);
+            valueRepository.save(whatValue);
+        }
         return ValueTrashCanResponseDto.from(valueTrashCan);
     }
 }

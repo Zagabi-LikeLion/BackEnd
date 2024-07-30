@@ -26,7 +26,7 @@ public class ValueChangeLog extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ChangeType changeType;
 
-    @Column(nullable = false)
+    @Column
     private String changeReason;
 
     @ManyToOne(fetch = FetchType.LAZY)
