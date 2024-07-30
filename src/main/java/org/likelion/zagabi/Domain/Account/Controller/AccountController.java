@@ -15,6 +15,8 @@ import org.likelion.zagabi.Domain.Account.Service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/account")
 @RequiredArgsConstructor
@@ -35,33 +37,33 @@ public class AccountController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletRequest request) {
+    public ResponseEntity<?> logout(HttpServletRequest request) {
         accountService.logout(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(Map.of("message", "로그아웃이 성공적으로 완료되었습니다."));
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<Void> forgotPassword(@RequestBody @Valid ForgotPwRequestDto requestDto) {
+    public ResponseEntity<?> forgotPassword(@RequestBody @Valid ForgotPwRequestDto requestDto) {
         accountService.forgotPassword(requestDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(Map.of("message", "본인 인증이 완료되었습니다, 비밀번호 변경 창으로 이동합니다."));
     }
 
     @PutMapping("/update-password")
-    public ResponseEntity<Void> updatePassword(HttpServletRequest request, @RequestBody @Valid ChangePwRequestDto requestDto) {
+    public ResponseEntity<?> updatePassword(HttpServletRequest request, @RequestBody @Valid ChangePwRequestDto requestDto) {
         accountService.updatePassword(request, requestDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(Map.of("message", "비밀번호가 성공적으로 변경되었습니다."));
     }
 
     @DeleteMapping("/delete-account")
-    public ResponseEntity<Void> deleteAccount(HttpServletRequest request) {
+    public ResponseEntity<?> deleteAccount(HttpServletRequest request) {
         accountService.deleteAccount(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(Map.of("message", "성공적으로 탈퇴되었습니다."));
     }
 
     @PatchMapping("/change-nickname")
-    public ResponseEntity<Void> changeNickname(HttpServletRequest request, @RequestBody @Valid ChangeNicknameRequestDto requestDto) {
+    public ResponseEntity<?> changeNickname(HttpServletRequest request, @RequestBody @Valid ChangeNicknameRequestDto requestDto) {
         accountService.changeNickname(request, requestDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(Map.of("message", "닉네임이 성공적으로 변경되었습니다."));
     }
 
     @GetMapping("/reissue")
