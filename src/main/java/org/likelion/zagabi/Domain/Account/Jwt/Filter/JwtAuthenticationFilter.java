@@ -14,12 +14,14 @@ import org.likelion.zagabi.Global.Util.RedisUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
@@ -63,7 +65,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private void authenticateAccessToken(String accessToken) {
         CustomUserDetails userDetails = new CustomUserDetails(
                 jwtProvider.getUserEmail(accessToken),
-                null
+                null,
+                jwtProvider.isAdmin(accessToken)
         );
 
         log.info("[*] Authority Registration");

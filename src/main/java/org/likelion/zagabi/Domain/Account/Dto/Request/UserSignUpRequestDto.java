@@ -30,6 +30,7 @@ public record UserSignUpRequestDto(
                 .email(email)
                 .password(encodedPw)
                 .nickName(nickName)
+                .isAdmin(false) // 명시적으로 설정
                 .securityAnswer(securityAnswer)
                 .build();
     }

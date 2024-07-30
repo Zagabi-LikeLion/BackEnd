@@ -26,10 +26,9 @@ public class ValueTrashCan {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-
-//    public void setUser(User user){
-//        this.user = user;
-//    }
+    public void setUser(User user){
+        this.user = user;
+    }
     public void setValue_title(String valueTitle){
         value_title = valueTitle;
     }
