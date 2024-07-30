@@ -19,7 +19,7 @@ public class ValueCategoryQueryService {
 
     private final ValueCategoryRepository valueCategoryRepository;
 
-    /*//모든 카테고리 조회
+    //모든 카테고리 조회
     public List<ValueCategoryResponseDto> getAllValueCategories(String email) {
 
         //사용자 이메일로 모든 카테고리 조회
@@ -32,7 +32,7 @@ public class ValueCategoryQueryService {
                         .categoryName(category.getCategoryName())
                         .build())
                 .collect(Collectors.toList());
-    }*/
+    }
 
     //특정 카테고리 조회
     public ValueCategoryResponseDto getValueCategory(Long categoryId) {

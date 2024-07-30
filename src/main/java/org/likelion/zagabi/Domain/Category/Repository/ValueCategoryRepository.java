@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface ValueCategoryRepository extends JpaRepository<ValueCategory, Long> {
 
-    /*// 사용자 ID로 모든 카테고리 조회
-    List<ValueCategory> findAllByUserEmail(String email);*/
+    // 사용자 ID로 모든 카테고리 조회
+    List<ValueCategory> findAllByUserEmail(String email);
 }

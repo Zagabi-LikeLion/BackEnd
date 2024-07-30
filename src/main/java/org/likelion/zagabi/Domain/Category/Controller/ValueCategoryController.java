@@ -2,12 +2,14 @@ package org.likelion.zagabi.Domain.Category.Controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.likelion.zagabi.Domain.Account.Jwt.UserDetails.CustomUserDetails;
 import org.likelion.zagabi.Domain.Category.Dto.Request.ValueCategoryRequestDto;
 import org.likelion.zagabi.Domain.Category.Dto.Response.ValueCategoryResponseDto;
 import org.likelion.zagabi.Domain.Category.Service.ValueCategoryQueryService;
 import org.likelion.zagabi.Domain.Category.Service.ValueCategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,18 +26,18 @@ public class ValueCategoryController {
 
     //카테고리 생성
     @PostMapping
-    public ResponseEntity<ValueCategoryResponseDto> createCategory(/*@AuthenticationPrincipal CustomUserDetails userDetails,*/
+    public ResponseEntity<ValueCategoryResponseDto> createCategory(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                    @RequestBody ValueCategoryRequestDto request) {
-        ValueCategoryResponseDto responseDto = valueCategoryService.save(/*userDetails.getUsername(), */request.categoryName());
+        ValueCategoryResponseDto responseDto = valueCategoryService.save(userDetails.getUsername(), request.categoryName());
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    /*//모든 카테고리 조회
+    //모든 카테고리 조회
     @GetMapping
     public ResponseEntity<List<ValueCategoryResponseDto>> getAllCategories(@AuthenticationPrincipal CustomUserDetails userDetails) {
         List<ValueCategoryResponseDto> response = valueCategoryQueryService.getAllValueCategories(userDetails.getUsername());
         return ResponseEntity.ok(response);
-    }*/
+    }
 
     //특정 카테고리 조회
     @GetMapping("/{categoryId}")

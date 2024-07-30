@@ -3,6 +3,7 @@ package org.likelion.zagabi.Domain.Category.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.likelion.zagabi.Domain.Account.Entity.User;
+import org.likelion.zagabi.Domain.Account.Repository.UserJpaRepository;
 import org.likelion.zagabi.Domain.Category.Dto.Response.ValueCategoryResponseDto;
 import org.likelion.zagabi.Domain.Category.Entity.ValueCategory;
 import org.likelion.zagabi.Domain.Category.Repository.ValueCategoryRepository;
@@ -18,19 +19,19 @@ public class ValueCategoryService {
 
     private final ValueRepository valueRepository;
     private final ValueCategoryRepository valueCategoryRepository;
-    /*private final UserRepository userRepository;*/
+    private final UserJpaRepository userRepository;
 
     //카테고리 저장
-    public ValueCategoryResponseDto save(/*String email,*/ String categoryName) {
+    public ValueCategoryResponseDto save(String email, String categoryName) {
 
-        /*//이메일로 유저 조회
+        //이메일로 유저 조회
         User user = userRepository.findByEmail(email)
-                .orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다"));*/
+                .orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다"));
 
         //DTO에서 categoryName을 뽑아서 Entity 생성
         ValueCategory valueCategory = ValueCategory.builder()
                 .categoryName(categoryName)
-                /*.user(user)*/
+                .user(user)
                 .build();
 
         //생성한 Entity를 Repository에 저장
