@@ -20,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -46,24 +45,6 @@ public class JwtProvider {
         redisUtil = redis;
 
     }
-
-    // Jwt 생성
-//    public String createJwtAccessToken(CustomUserDetails customUserDetails) {
-//        Instant issuedAt = Instant.now();
-//        Instant expiration = issuedAt.plusMillis(accessExpMs);
-//
-//        return Jwts.builder()
-//                .header()
-//                .add("alg", "HS256")
-//                .add("typ", "JWT")
-//                .and()
-//                .claim("email", customUserDetails.getUsername())
-//                .claims("is_admin", customUserDetails.getAuthorities())
-//                .issuedAt(Date.from(issuedAt))
-//                .expiration(Date.from(expiration))
-//                .signWith(secretKey)
-//                .compact();
-//    }
     public String createJwtAccessToken(CustomUserDetails customUserDetails) {
         Instant issuedAt = Instant.now();
         Instant expiration = issuedAt.plusMillis(accessExpMs);
@@ -145,14 +126,6 @@ public class JwtProvider {
                 .getPayload()
                 .get("email", String.class);
     }
-
-    public Boolean isAdmin(String token) throws SignatureException {
-        return (Boolean) Jwts.parser()
-                .verifyWith(secretKey).build()
-                .parseSignedClaims(token)
-                .getPayload().get("is_admin");
-    }
-
 
     public JwtDto reissueToken(String refreshToken) throws SignatureException {
         UserDetails userDetails = customUserDetailService.loadUserByUsername(getUserEmail(refreshToken));
