@@ -85,7 +85,7 @@ public class AccountService {
             throw new IllegalArgumentException("입력하신 질문에 대답이 일치하지 않습니다.");
         }
     }
-//    public void updatePassword(HttpServletRequest request, ChangePwRequestDto requestDto, User user) {
+    //    public void updatePassword(HttpServletRequest request, ChangePwRequestDto requestDto, User user) {
 //        if (!passwordEncoder.matches(requestDto.password(), user.getPassword())) {
 //            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 //        }
@@ -140,7 +140,8 @@ public class AccountService {
 
             // 닉네임 변경
             user.updateNickname(requestDto.newNickName());
-            userJpaRepository.save(user);
+// 메서드가 트랜잭션으로 묶여있으면 트랜잭션 종료 시 변경된 영속성 객체를 자동으로 감지(더티체킹)하여 DB에 commit됨.
+//            userJpaRepository.save(user);
 
         } catch (ExpiredJwtException e) {
             throw new SecurityCustomException(TokenErrorCode.TOKEN_EXPIRED);

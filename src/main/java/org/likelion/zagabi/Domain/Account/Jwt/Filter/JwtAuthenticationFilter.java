@@ -65,8 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private void authenticateAccessToken(String accessToken) {
         CustomUserDetails userDetails = new CustomUserDetails(
                 jwtProvider.getUserEmail(accessToken),
-                null,
-                jwtProvider.isAdmin(accessToken)
+                null
         );
 
         log.info("[*] Authority Registration");
