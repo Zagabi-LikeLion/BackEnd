@@ -1,5 +1,6 @@
 package org.likelion.zagabi.Domain.Account.Controller;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
+    private final JwtProvider jwtProvider;
 
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponseDto> login(@RequestBody @Valid UserLoginRequestDto requestDto) {
@@ -56,5 +58,18 @@ public class AccountController {
     public ResponseEntity<Void> changeNickname(HttpServletRequest request, @RequestBody @Valid ChangeNicknameRequestDto requestDto) {
         accountService.changeNickname(request, requestDto);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/reissue")
+    public ResponseEntity<JwtDto> reissueToken(@RequestHeader("RefreshToken") String refreshToken) {
+        try {
+            jwtProvider.validateRefreshToken(refreshToken);
+            JwtDto newToken = jwtProvider.reissueToken(refreshToken);
+            return ResponseEntity.ok(newToken);
+        } catch (ExpiredJwtException eje) {
+            throw new SecurityCustomException(TokenErrorCode.TOKEN_EXPIRED, eje);
+        } catch (IllegalArgumentException iae) {
+            throw new SecurityCustomException(TokenErrorCode.INVALID_TOKEN, iae);
+        }
     }
 }
