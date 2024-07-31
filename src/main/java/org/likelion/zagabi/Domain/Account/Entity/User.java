@@ -41,16 +41,16 @@ public class User extends BaseEntity {
     @JoinColumn(name = "security_question_id")
     private SecurityQuestion securityQuestion;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Diary> diaries;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<ValueCategory> valueCategories;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<ValueChangeLog> valueChangeLogs;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<ValueTrashCan> valueTrashCans;
 
 

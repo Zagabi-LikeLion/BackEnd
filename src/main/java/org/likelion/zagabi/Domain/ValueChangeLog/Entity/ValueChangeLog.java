@@ -39,7 +39,7 @@ public class ValueChangeLog extends BaseEntity {
     @Column
     private String categoryName;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

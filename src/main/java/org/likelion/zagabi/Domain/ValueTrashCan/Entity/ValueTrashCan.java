@@ -23,7 +23,7 @@ public class ValueTrashCan {
     private String value_title;
 
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     public void setUser(User user){
