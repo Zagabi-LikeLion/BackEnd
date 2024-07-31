@@ -71,11 +71,11 @@ public class AccountController {
     }
 
     @GetMapping("/reissue")
-    public ResponseEntity<JwtDto> reissueToken(@RequestHeader("RefreshToken") String refreshToken) {
+    public ResponseEntity<Map<String, String>> reissueToken(@RequestHeader("RefreshToken") String refreshToken) {
         try {
             jwtProvider.validateRefreshToken(refreshToken);
-            JwtDto newToken = jwtProvider.reissueToken(refreshToken);
-            return ResponseEntity.ok(newToken);
+            String newAccessToken = jwtProvider.reissueToken(refreshToken);
+            return ResponseEntity.ok(Map.of("accessToken", newAccessToken)); //access 토큰만 재발급하는걸로 변경
         } catch (ExpiredJwtException eje) {
             throw new SecurityCustomException(TokenErrorCode.TOKEN_EXPIRED, eje);
         } catch (IllegalArgumentException iae) {

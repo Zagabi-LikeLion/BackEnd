@@ -66,19 +66,28 @@ public class AccountService {
     public void logout(HttpServletRequest request) {
         try {
             String accessToken = jwtProvider.resolveAccessToken(request);
-            redisUtil.save(
-                    accessToken,
-                    "logout",
-                    jwtProvider.getExpTime(accessToken),
-                    TimeUnit.MILLISECONDS
-            );
-            redisUtil.delete(
-                    jwtProvider.getUserEmail(accessToken)
-            );
+            if (accessToken != null) {
+                String userEmail = jwtProvider.getUserEmail(accessToken);
+                String redisKey = userEmail + ":refresh";
+                String refreshToken = (String) redisUtil.get(redisKey);
+
+                // 블랙리스트에 refreshToken 추가
+                if (refreshToken != null) {
+                    redisUtil.save(
+                            "blacklist:" + refreshToken,
+                            userEmail,
+                            jwtProvider.getRefreshExpTime(refreshToken),
+                            TimeUnit.MILLISECONDS
+                    );
+                    redisUtil.delete(redisKey);
+                }
+
+            }
         } catch (ExpiredJwtException e) {
             throw new SecurityCustomException(TokenErrorCode.TOKEN_EXPIRED);
         }
     }
+
 
     public void forgotPassword(ForgotPwRequestDto requestDto) {
         User user = userJpaRepository.findByEmail(requestDto.email())
@@ -121,13 +130,14 @@ public class AccountService {
             userJpaRepository.delete(user);
 
             // Redis에 저장된 토큰 정보 삭제
-            redisUtil.delete(accessToken);
-            redisUtil.delete(userEmail);
+            String redisKey = userEmail + ":refresh";
+            redisUtil.delete(redisKey);
 
         } catch (ExpiredJwtException e) {
             throw new SecurityCustomException(TokenErrorCode.TOKEN_EXPIRED);
         }
     }
+
     public void changeNickname(HttpServletRequest request, ChangeNicknameRequestDto requestDto) {
         try {
             String accessToken = jwtProvider.resolveAccessToken(request);

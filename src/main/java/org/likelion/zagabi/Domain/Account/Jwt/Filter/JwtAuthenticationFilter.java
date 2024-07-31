@@ -1,6 +1,8 @@
 package org.likelion.zagabi.Domain.Account.Jwt.Filter;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,32 +35,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        log.info("[*] Jwt Filter");
+        log.info("[ JwtAuthorizationFilter ] 인가 필터 작동");
 
         try {
+            // Request에서 access token 추출
             String accessToken = jwtProvider.resolveAccessToken(request);
 
-            // accessToken 없이 접근할 경우
+            // accessToken 없이 접근할 경우 필터를 건너뜀
             if (accessToken == null) {
+                log.info("[ JwtAuthorizationFilter ] Access Token 이 존재하지 않음. 필터를 건너뜁니다.");
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            // logout 처리된 accessToken
-            if (redisUtil.get(accessToken) != null && redisUtil.get(accessToken).equals("logout")) {
-                log.info("[*] Logout accessToken");
-                // TODO InsufficientAuthenticationException 예외 처리
-                log.info("==================");
-                filterChain.doFilter(request, response);
-                log.info("==================");
-                return;
-            }
-
-            log.info("[*] Authorization with Token");
             authenticateAccessToken(accessToken);
+            log.info("[ JwtAuthorizationFilter ] 종료. 다음 필터로 넘어갑니다.");
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
-            log.warn("[*] case : accessToken Expired");
+            log.warn("[ JwtAuthorizationFilter ] accessToken 이 만료되었습니다.");
+            throw e; //CustomAuthenticationEntryPoint에서 예외 처리
+        } catch (SecurityException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
+            // 추가된 부분: 잘못된 토큰 예외 처리
+            log.warn("[ JwtAuthorizationFilter ] 잘못된 토큰입니다.");
+            throw e;
         }
     }
 
