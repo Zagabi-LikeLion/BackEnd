@@ -3,7 +3,13 @@ package org.likelion.zagabi.Domain.Account.Entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
+import org.likelion.zagabi.Domain.Category.Entity.ValueCategory;
+import org.likelion.zagabi.Domain.Diary.Entity.Diary;
+import org.likelion.zagabi.Domain.ValueChangeLog.Entity.ValueChangeLog;
+import org.likelion.zagabi.Domain.ValueTrashCan.Entity.ValueTrashCan;
 import org.likelion.zagabi.Global.Common.BaseEntity;
+
+import java.util.List;
 
 @Entity
 @Builder
@@ -34,6 +40,19 @@ public class User extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "security_question_id")
     private SecurityQuestion securityQuestion;
+
+    @OneToMany(mappedBy = "user")
+    private List<Diary> diaries;
+
+    @OneToMany(mappedBy = "user")
+    private List<ValueCategory> valueCategories;
+
+    @OneToMany(mappedBy = "user")
+    private List<ValueChangeLog> valueChangeLogs;
+
+    @OneToMany(mappedBy = "user")
+    private List<ValueTrashCan> valueTrashCans;
+
 
 
     public void updatePassword(String pw) {
