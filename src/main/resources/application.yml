@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: Zagabi
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://zagabi.c1eimeg6ogxl.ap-northeast-2.rds.amazonaws.com:3306/zagabi?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: admin
+    password: tkflcnrk!
+
+
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+  jwt:
+    # HS256 알고리즘을 사용할 것이기 때문에 256bit, 즉 32byte 이상의 secret key를 사용
+    secret: o2eh1qu7yo9gthdh78u2q1o7hyua2r7uyr2q9yi7springground
+    token:
+      access-expiration-time: 3600000 #30분
+      refresh-expiration-time: 86400000 #24시간
+
+redis:
+  host: localhost
+  port: 6379
+
+server:
+  port: 8080
