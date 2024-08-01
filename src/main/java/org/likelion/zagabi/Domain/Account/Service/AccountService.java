@@ -108,10 +108,7 @@ public class AccountService {
         User user = userJpaRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        if (!passwordEncoder.matches(requestDto.password(), user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-        if (requestDto.password().equals(requestDto.newPassword())) {
+        if (user.getPassword().equals(requestDto.newPassword())) {
             throw new IllegalArgumentException("같은 비밀번호를 사용할 수 없습니다.");
         }
         user.updatePassword(passwordEncoder.encode(requestDto.newPassword()));

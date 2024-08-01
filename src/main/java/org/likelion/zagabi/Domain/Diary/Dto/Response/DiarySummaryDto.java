@@ -1,3 +1,4 @@
+/*
 package org.likelion.zagabi.Domain.Diary.Dto.Response;
 
 import lombok.Builder;
@@ -17,4 +18,4 @@ public record DiarySummaryDto(
                 .mood(diary.getMood())
                 .build();
     }
-}
+}*/
