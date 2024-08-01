@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.likelion.zagabi.Domain.Account.Entity.User;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Entity
 @AllArgsConstructor
@@ -26,10 +28,24 @@ public class ValueTrashCan {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @Column
+    private String categoryName;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
     public void setUser(User user){
         this.user = user;
     }
     public void setValue_title(String valueTitle){
         value_title = valueTitle;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

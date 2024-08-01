@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +39,9 @@ public class ValueTrashCanService {
 
         valueTrashCan.setValue_title(value.get().getValue_title());
         valueTrashCan.setUser(user);
+        valueTrashCan.setCreatedAt(LocalDateTime.now());
+        valueTrashCan.setCategoryName(value.get().getCategory_name());
+
         valueTrashCanRepository.save(valueTrashCan);
 
         int deleteRanking = value.get().getRanking();
