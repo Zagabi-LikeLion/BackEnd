@@ -8,6 +8,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CorsConfig implements WebMvcConfigurer {
@@ -24,8 +25,10 @@ public class CorsConfig implements WebMvcConfigurer {
         allowedHttpMethods.add("GET");
         allowedHttpMethods.add("POST");
 
-        configuration.setAllowedOrigins(allowedOriginPatterns);
+        configuration.setAllowedOriginPatterns(allowedOriginPatterns); // setAllowedOrigins를 setAllowedOriginPatterns로 변경
         configuration.setAllowedMethods(allowedHttpMethods);
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
