@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.likelion.zagabi.Domain.Account.Repository.UserJpaRepository;
 import org.likelion.zagabi.Domain.Diary.Dto.Response.DiaryQuestionResponseDto;
 import org.likelion.zagabi.Domain.Diary.Dto.Response.DiaryResponseDto;
-import org.likelion.zagabi.Domain.Diary.Dto.Response.DiarySummaryDto;
 import org.likelion.zagabi.Domain.Diary.Entity.Diary;
 import org.likelion.zagabi.Domain.Diary.Entity.DiaryQuestion;
 import org.likelion.zagabi.Domain.Diary.Repository.DiaryQuestionRepository;
@@ -38,13 +37,13 @@ public class DiaryQueryService {
     }
 
     // 요청한 날의 일기 요약 조회
-    public DiarySummaryDto getDiaryByDay(LocalDate date, String email) {
+    public DiaryResponseDto getDiaryByDay(LocalDate date, String email) {
 
         // 특정 날짜에 작성된 일기 조회
         Diary diary = diaryRepository.findByDateAndUserEmail(date, email)
                 .orElseThrow(() -> new RuntimeException("해당 날짜에 작성된 일기가 없습니다"));
 
-        return DiarySummaryDto.from(diary);
+        return DiaryResponseDto.from(diary);
     }
 
     // 일기에 제공할 질문 가져오기
