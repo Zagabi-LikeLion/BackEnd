@@ -7,7 +7,6 @@ import org.likelion.zagabi.Domain.Diary.Dto.Request.DiaryRequestDto;
 import org.likelion.zagabi.Domain.Diary.Dto.Request.UpdateDiaryRequestDto;
 import org.likelion.zagabi.Domain.Diary.Dto.Response.DiaryQuestionResponseDto;
 import org.likelion.zagabi.Domain.Diary.Dto.Response.DiaryResponseDto;
-import org.likelion.zagabi.Domain.Diary.Dto.Response.DiarySummaryDto;
 import org.likelion.zagabi.Domain.Diary.Service.DiaryQueryService;
 import org.likelion.zagabi.Domain.Diary.Service.DiaryService;
 import org.springframework.http.HttpStatus;
@@ -46,9 +45,9 @@ public class DiaryController {
 
     // 요청한 날의 일기 조회
     @GetMapping("/by-day")
-    public ResponseEntity<DiarySummaryDto> getDiaryByDay(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<DiaryResponseDto> getDiaryByDay(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                          @RequestParam LocalDate date) {
-        DiarySummaryDto diary = diaryQueryService.getDiaryByDay(date, userDetails.getUsername());
+        DiaryResponseDto diary = diaryQueryService.getDiaryByDay(date, userDetails.getUsername());
         return ResponseEntity.ok(diary);
     }
 
