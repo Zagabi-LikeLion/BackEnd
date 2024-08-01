@@ -33,7 +33,6 @@ public class User extends BaseEntity {
     @Column(name = "nickname", nullable = false, length = 20)
     private String nickName;
 
-
     @Column(name="security_answer", nullable = false)
     private String securityAnswer;
 
@@ -52,8 +51,6 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<ValueTrashCan> valueTrashCans;
-
-
 
     public void updatePassword(String pw) {
         password = pw;

@@ -28,7 +28,7 @@ public class DiaryQueryService {
     public DiaryResponseDto getDiary(String email, Long id) {
 
         //id로 일기 조회
-        Diary diary = diaryRepository.findById(id).orElseThrow();
+        Diary diary = diaryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("일기를 찾을 수 없습니다."));
         if (!diary.getUser().getEmail().equals(email)) {
             throw new RuntimeException("권한이 없습니다.");
         }
