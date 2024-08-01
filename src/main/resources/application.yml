@@ -26,8 +26,8 @@ spring:
       refresh-expiration-time: 86400000 #24시간
 
 redis:
-  host: localhost
+  host: redis
   port: 6379
 
 server:
-  port: 8081
+  port: 8080
