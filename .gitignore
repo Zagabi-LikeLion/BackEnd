@@ -1,4 +1,4 @@
-
+*.yml
 
 
 HELP.md
@@ -40,7 +40,7 @@ out/
 .vscode/
 
 # yml files
-
+application.yml
 
 
 
