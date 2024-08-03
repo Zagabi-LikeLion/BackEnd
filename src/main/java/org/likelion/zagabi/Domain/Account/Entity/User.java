@@ -3,7 +3,13 @@ package org.likelion.zagabi.Domain.Account.Entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
+import org.likelion.zagabi.Domain.Category.Entity.ValueCategory;
+import org.likelion.zagabi.Domain.Diary.Entity.Diary;
+import org.likelion.zagabi.Domain.ValueChangeLog.Entity.ValueChangeLog;
+import org.likelion.zagabi.Domain.ValueTrashCan.Entity.ValueTrashCan;
 import org.likelion.zagabi.Global.Common.BaseEntity;
+
+import java.util.List;
 
 @Entity
 @Builder
@@ -27,7 +33,6 @@ public class User extends BaseEntity {
     @Column(name = "nickname", nullable = false, length = 20)
     private String nickName;
 
-
     @Column(name="security_answer", nullable = false)
     private String securityAnswer;
 
@@ -35,6 +40,17 @@ public class User extends BaseEntity {
     @JoinColumn(name = "security_question_id")
     private SecurityQuestion securityQuestion;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Diary> diaries;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<ValueCategory> valueCategories;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<ValueChangeLog> valueChangeLogs;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<ValueTrashCan> valueTrashCans;
 
     public void updatePassword(String pw) {
         password = pw;
