@@ -18,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -48,6 +49,13 @@ public class DiaryController {
         return ResponseEntity.ok(diaryResponseDto);
     }
 
+    // 사용자 전체 일기 조회
+    @Operation(method = "GET", summary = "사용자 전체 일기 조회", description = "사용자가 작성한 모든 일기를 조회합니다.<br/> header에 accessToken을 담아서 전송합니다.")
+    @GetMapping("/all")
+    public ResponseEntity<List<DiaryResponseDto>> getAllDiaries(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<DiaryResponseDto> diaries = diaryQueryService.getAllDiaries(userDetails.getUsername());
+        return ResponseEntity.ok(diaries);
+    }
 
     // 요청한 날의 일기 조회
     @GetMapping("/by-day")
@@ -58,6 +66,8 @@ public class DiaryController {
         DiaryResponseDto diary = diaryQueryService.getDiaryByDay(date, userDetails.getUsername());
         return ResponseEntity.ok(diary);
     }
+
+
 
     //일기에 제공할 질문 조회
     @Operation(method = "GET", summary = "일기에 들어갈 질문 제공", description = "일기에 들어갈 질문을 제공합니다.<br/> header에 accessToken을 담아서 전송합니다.")
