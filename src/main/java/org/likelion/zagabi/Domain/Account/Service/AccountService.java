@@ -3,6 +3,7 @@ package org.likelion.zagabi.Domain.Account.Service;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.likelion.zagabi.Domain.Account.Dto.Request.*;
 import org.likelion.zagabi.Domain.Account.Dto.Response.UserLoginResponseDto;
 import org.likelion.zagabi.Domain.Account.Dto.Response.UserSignUpResponseDto;
@@ -15,20 +16,35 @@ import org.likelion.zagabi.Domain.Account.Jwt.Util.JwtProvider;
 import org.likelion.zagabi.Domain.Account.Repository.SecurityQuestionRepository;
 import org.likelion.zagabi.Domain.Account.Repository.UserJpaRepository;
 import org.likelion.zagabi.Global.Util.RedisUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.time.Duration;
+import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class AccountService {
+
+    private static final String AUTH_CODE_PREFIX = "AuthCode ";
     private final UserJpaRepository userJpaRepository;
     private final SecurityQuestionRepository securityQuestionRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RedisUtil redisUtil;
+    private final MailService mailService;
+
+    @Value("${spring.mail.auth-code-expiration-millis}")
+    private long authCodeExpirationMillis;
+
     public UserLoginResponseDto login(UserLoginRequestDto requestDto) {
         // 회원 정보 존재 하는지 확인
         User user = userJpaRepository.findByEmail(requestDto.email())
@@ -151,4 +167,54 @@ public class AccountService {
         }
     }
 
+    // Email로 Code를 보내는 부분
+    public void sendCodeToEmail(String toEmail) {
+        Optional<User> user = userJpaRepository.findByEmail(toEmail);
+        if (user.isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+        }
+        String title = "자가비 이메일 인증 번호";
+        String authCode = this.createCode();
+        mailService.sendEmail(toEmail, title, authCode);
+        // 이메일 인증 요청 시 인증 번호 Redis에 저장 ( key = "AuthCode " + Email / value = AuthCode )
+        redisUtil.save(
+                AUTH_CODE_PREFIX + toEmail,
+                authCode,
+                Duration.ofMillis(this.authCodeExpirationMillis)
+        );
+
+    }
+
+    // 무작위로 인증번호 생성 코드
+    private String createCode() {
+        int lenth = 6;
+        try {
+            Random random = SecureRandom.getInstanceStrong();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < lenth; i++) {
+                builder.append(random.nextInt(10));
+            }
+            return builder.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalArgumentException("인증 번호 생성을 위한 알고리즘을 찾을 수 없습니다.");
+        }
+    }
+
+    // 사용자가 받은 인증 코드와 사용자가 보낸 인증코드가 일치하는지 체크하는 부분
+    public void verifiedCode(String email, String authCode) {
+        Optional<User> user = userJpaRepository.findByEmail(email);
+        if (user.isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+        }
+        String redisAuthCode = (String) redisUtil.get(AUTH_CODE_PREFIX + email);
+        //redisAuthCode가 null인지 아닌지 확인하고, redisAuthCode가 authCode와 같은지 체크
+        boolean authResult = redisAuthCode != null && redisAuthCode.equals(authCode);
+
+
+        if (!authResult) {
+            throw new IllegalArgumentException("인증번호가 일치하지 않습니다.");
+        } else {
+            log.info("인증 성공");
+        }
+    }
 }
