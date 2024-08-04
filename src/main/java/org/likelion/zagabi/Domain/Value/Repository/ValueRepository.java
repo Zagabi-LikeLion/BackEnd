@@ -11,8 +11,8 @@ import java.util.Optional;
 public interface ValueRepository extends JpaRepository<Value, Long> {
     List<Value> findAllByCategoryId(Long category_Id);
 
-    List<Value> findAllByRankingGreaterThan(Integer ranking);
-    Optional<Value> findByRanking(Integer ranking);
+    List<Value> findAllByCategoryIdAndRankingGreaterThan(Long categoryId, Integer ranking);
+    Optional<Value> findByRankingAndCategoryId(Integer ranking, Long categoryId);
 
     //특정 카테고리에 속하는 모든 가치를 삭제하는 메서드
     void deleteAllByCategoryId(Long categoryId);

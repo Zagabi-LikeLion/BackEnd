@@ -43,7 +43,8 @@ public class ValueService {
         // 랭킹을 바꾸는 가치관
         Value firstValue = valueRepository.findById(updateValueRequestDto.valueId()).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 가치관입니다."));
         // firstValue에 의해 랭킹이 바뀌어지는 가치관
-        Value secondValue = valueRepository.findByRanking(updateValueRequestDto.changeRanking()).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 가치관입니다."));
+        Value secondValue = valueRepository.findByRankingAndCategoryId(updateValueRequestDto.changeRanking(), firstValue.getCategoryId()).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 가치관입니다."));
+
 
         //secondValue는 firstValue의 바꾸기전 랭킹으로 바뀌어짐
         secondValue.updateRanking(firstValue.getRanking());
@@ -64,10 +65,12 @@ public class ValueService {
         Value deleteValue = valueRepository.findById(valueId).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 가치관입니다."));
         int deleteRanking = deleteValue.getRanking();
 
+
+        // 삭제된 value의 categoryId와 같으면서 ranking이 삭제된 값의 ranking보다 높은 값들을 찾아 순위를 하나씩 올림
+        List<Value> valuesToUpdate = valueRepository.findAllByCategoryIdAndRankingGreaterThan(deleteValue.getCategoryId(), deleteRanking);
+
         valueRepository.deleteById(valueId);
 
-        // ranking이 삭제된 값의 ranking보다 높은 값들을 찾아 순위를 하나씩 올림
-        List<Value> valuesToUpdate = valueRepository.findAllByRankingGreaterThan(deleteRanking);
         for (Value value : valuesToUpdate) {
             value.updateRanking(value.getRanking() - 1);
             valueRepository.save(value);

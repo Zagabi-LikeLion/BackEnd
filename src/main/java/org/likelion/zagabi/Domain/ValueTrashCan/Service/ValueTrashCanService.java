@@ -45,11 +45,12 @@ public class ValueTrashCanService {
         valueTrashCanRepository.save(valueTrashCan);
 
         int deleteRanking = value.get().getRanking();
+        // 삭제된 value의 categoryId와 같으면서 ranking이 삭제된 값의 ranking보다 높은 값들을 찾아 순위를 하나씩 올림
+        List<Value> valuesToUpdate = valueRepository.findAllByCategoryIdAndRankingGreaterThan(value.get().getCategoryId(), deleteRanking);
 
         valueRepository.deleteById(createValueTrashCanRequestDto.valueId());
 
-        // ranking이 삭제된 값의 ranking보다 높은 값들을 찾아 순위를 하나씩 올림
-        List<Value> valuesToUpdate = valueRepository.findAllByRankingGreaterThan(deleteRanking);
+
         for (Value whatValue : valuesToUpdate) {
             whatValue.updateRanking(whatValue.getRanking() - 1);
             valueRepository.save(whatValue);
