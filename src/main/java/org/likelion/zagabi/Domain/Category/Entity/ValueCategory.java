@@ -30,7 +30,4 @@ public class ValueCategory {
         this.categoryName = categoryName;
     }
 
-    @OneToMany(mappedBy = "valueCategory", cascade = CascadeType.ALL)
-    private List<Value> values;
-
 }

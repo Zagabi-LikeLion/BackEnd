@@ -36,9 +36,6 @@ public class Value {
     @OneToMany(mappedBy = "value", cascade = CascadeType.ALL)
     private List<ValueChangeLog> valueChangeLogList;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private ValueCategory valueCategory;
-
     public void setFirstRank(int firstRank){
         ranking = firstRank;
     }
