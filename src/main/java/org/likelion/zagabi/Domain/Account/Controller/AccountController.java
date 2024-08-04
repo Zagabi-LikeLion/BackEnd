@@ -1,6 +1,7 @@
 package org.likelion.zagabi.Domain.Account.Controller;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +28,14 @@ public class AccountController {
     private final AccountService accountService;
     private final AccountQueryService accountQueryService;
     private final JwtProvider jwtProvider;
-
+    @Operation(summary = "로그인", description = "이메일, 비밀번호를 입력받아 로그인을 진행합니다. " +
+            "반환 값으로 JWT accessToken과 refreshToken이 발급됨. accessToken 값을 Authorize에 인증")
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponseDto> login(@RequestBody @Valid UserLoginRequestDto requestDto) {
         UserLoginResponseDto responseDto = accountService.login(requestDto);
         return ResponseEntity.ok(responseDto);
     }
-
+    @Operation(summary = "회원가입", description = "")
     @PostMapping("/signup")
     public ResponseEntity<UserSignUpResponseDto> signup(@RequestBody @Valid UserSignUpRequestDto requestDto) {
         UserSignUpResponseDto responseDto = accountService.signup(requestDto);
