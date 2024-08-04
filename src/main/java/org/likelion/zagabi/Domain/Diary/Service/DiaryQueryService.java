@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -51,6 +53,14 @@ public class DiaryQueryService {
         DiaryQuestion question = diaryQuestionRepository.findRandomQuestion()
                 .orElseThrow(() -> new RuntimeException("DB에 질문이 존재하지 않음"));
         return DiaryQuestionResponseDto.from(question);
+    }
+
+    // 사용자 전체 일기 조회
+    public List<DiaryResponseDto> getAllDiaries(String email) {
+        List<Diary> diaries = diaryRepository.findAllByUserEmail(email);
+        return diaries.stream()
+                .map(DiaryResponseDto::from)
+                .collect(Collectors.toList());
     }
 
 }
