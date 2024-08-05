@@ -1,6 +1,7 @@
 package org.likelion.zagabi.Domain.Account.Controller;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,9 @@ import org.likelion.zagabi.Domain.Account.Jwt.Exception.TokenErrorCode;
 import org.likelion.zagabi.Domain.Account.Jwt.Util.JwtProvider;
 import org.likelion.zagabi.Domain.Account.Service.AccountQueryService;
 import org.likelion.zagabi.Domain.Account.Service.AccountService;
+import org.likelion.zagabi.Domain.Email.Dto.EmailVerifyDto;
+import org.likelion.zagabi.Domain.Email.Service.EmailService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +31,7 @@ public class AccountController {
     private final AccountService accountService;
     private final AccountQueryService accountQueryService;
     private final JwtProvider jwtProvider;
+    private final EmailService emailService;
 
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponseDto> login(@RequestBody @Valid UserLoginRequestDto requestDto) {
@@ -87,5 +92,21 @@ public class AccountController {
     public ResponseEntity<List<SecurityQuestionResponseDto>> getSecurityQuestions() {
         List<SecurityQuestionResponseDto> responseDtos = accountQueryService.getSecurityQuestions();
         return ResponseEntity.ok(responseDtos);
+    }
+
+    @PostMapping("/send-email")
+    public ResponseEntity<String> sendEmail(@RequestParam String email) throws Exception {
+        String result = emailService.sendMessage(email);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<String> verifyCode(@Valid @RequestBody EmailVerifyDto requestDto) {
+        boolean check = emailService.verifyCode(requestDto);
+        if (check) {
+            return ResponseEntity.ok("인증 완료!");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("인증 실패");
+        }
     }
 }
