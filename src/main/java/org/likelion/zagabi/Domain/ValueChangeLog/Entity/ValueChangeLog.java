@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.likelion.zagabi.Domain.Account.Entity.User;
 import org.likelion.zagabi.Domain.Value.Entity.Value;
 import org.likelion.zagabi.Global.Common.BaseEntity;
@@ -29,9 +31,12 @@ public class ValueChangeLog extends BaseEntity {
     @Column
     private String changeReason;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "value_id")
-    private Value value;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "value_id", nullable = true)
+//    private Value value;
+
+    @Column
+    private Long valueId;
 
     @Column
     private Integer Ranking;
@@ -54,8 +59,12 @@ public class ValueChangeLog extends BaseEntity {
         this.user = user;
     }
 
-    public void setValue(Value whatValue) {
-        value = whatValue;
+//    public void setValue(Value whatValue) {
+//        value = whatValue;
+//    }
+
+    public void setValueId(Long valueId) {
+        this.valueId = valueId;
     }
 
     public void setRanking(int whatRanking) {

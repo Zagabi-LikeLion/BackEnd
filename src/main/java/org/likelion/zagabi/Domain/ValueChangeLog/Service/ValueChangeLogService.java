@@ -64,7 +64,7 @@ public class ValueChangeLogService {
             Optional<ValueCategory> valueCategory = Optional.ofNullable(valueCategoryRepository.findById(createValueChangeLogDto.category_id()).orElseThrow(() -> new RuntimeException("존재하지 않는 가치관 카테고리입니다.")));
             valueChangeLog.setCategoryName(valueCategory.get().getCategoryName());
             valueChangeLog.setValueTitle(value.get().getValue_title());
-            valueChangeLog.setValue(value.get());
+            valueChangeLog.setValueId(value.get().getId());
 
         }
         else if(valueChangeLog.getChangeType() == ChangeType.Change_Rank){
@@ -81,7 +81,7 @@ public class ValueChangeLogService {
             valueChangeLog.setCategoryName(valueCategory.get().getCategoryName());
             Optional<Value> value = Optional.ofNullable(valueRepository.findById(createValueChangeLogDto.value_id()).orElseThrow(() -> new RuntimeException("가치관을 찾을 수 없습니다")));;
             valueChangeLog.setValueTitle(value.get().getValue_title());
-            valueChangeLog.setValue(value.get());
+            valueChangeLog.setValueId(value.get().getId());
             valueChangeLog.setRanking(value.get().getRanking());
 
         }
@@ -96,7 +96,7 @@ public class ValueChangeLogService {
             valueChangeLog.setCategoryName(valueCategory.get().getCategoryName());
             Optional<Value> value = Optional.ofNullable(valueRepository.findById(createValueChangeLogDto.value_id()).orElseThrow(() -> new RuntimeException("가치관을 찾을 수 없습니다")));;
             valueChangeLog.setValueTitle(value.get().getValue_title());
-            valueChangeLog.setValue(value.get());
+            valueChangeLog.setValueId(value.get().getId());
         }
 
         valueChangeLogRepository.save(valueChangeLog);
