@@ -33,8 +33,8 @@ public class Value {
     @Column
     private Long categoryId;
 
-    @OneToMany(mappedBy = "value", cascade = CascadeType.ALL)
-    private List<ValueChangeLog> valueChangeLogList;
+//    @OneToMany(mappedBy = "value")
+//    private List<ValueChangeLog> valueChangeLogList;
 
     public void setFirstRank(int firstRank){
         ranking = firstRank;
