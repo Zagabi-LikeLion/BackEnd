@@ -23,5 +23,4 @@ public record SecurityQuestionResponseDto(
                 .map(SecurityQuestionResponseDto::from)
                 .collect(Collectors.toList());
     }
-
 }
