@@ -5,9 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.likelion.zagabi.Domain.Account.Dto.Request.*;
-import org.likelion.zagabi.Domain.Account.Dto.Response.SecurityQuestionResponseDto;
-import org.likelion.zagabi.Domain.Account.Dto.Response.UserLoginResponseDto;
-import org.likelion.zagabi.Domain.Account.Dto.Response.UserSignUpResponseDto;
+import org.likelion.zagabi.Domain.Account.Dto.Response.*;
 import org.likelion.zagabi.Domain.Account.Jwt.Dto.JwtDto;
 import org.likelion.zagabi.Domain.Account.Jwt.Exception.SecurityCustomException;
 import org.likelion.zagabi.Domain.Account.Jwt.Exception.TokenErrorCode;
@@ -47,10 +45,17 @@ public class AccountController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestBody @Valid ForgotPwRequestDto requestDto) {
-        accountService.forgotPassword(requestDto);
-        return ResponseEntity.ok().body(Map.of("message", "본인 인증이 완료되었습니다, 비밀번호 변경 창으로 이동합니다."));
+    public ResponseEntity<ForgotPwResponseDto> forgotPassword(@RequestBody @Valid ForgotPwRequestDto requestDto) {
+        ForgotPwResponseDto responseDto = accountService.forgotPassword(requestDto);
+        return ResponseEntity.ok(responseDto);
     }
+
+    @PostMapping("/forgot-password/get-token")
+    public ResponseEntity<getTokenForPwResponseDto> forgotPassword(@RequestBody @Valid getTokenForPwRequestDto requestDto) {
+        getTokenForPwResponseDto responseDto = accountService.getTokenForPw(requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
 
     @PutMapping("/update-password")
     public ResponseEntity<?> updatePassword(HttpServletRequest request, @RequestBody @Valid ChangePwRequestDto requestDto) {
@@ -88,4 +93,5 @@ public class AccountController {
         List<SecurityQuestionResponseDto> responseDtos = accountQueryService.getSecurityQuestions();
         return ResponseEntity.ok(responseDtos);
     }
+
 }

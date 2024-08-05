@@ -4,8 +4,10 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.likelion.zagabi.Domain.Account.Dto.Request.*;
+import org.likelion.zagabi.Domain.Account.Dto.Response.ForgotPwResponseDto;
 import org.likelion.zagabi.Domain.Account.Dto.Response.UserLoginResponseDto;
 import org.likelion.zagabi.Domain.Account.Dto.Response.UserSignUpResponseDto;
+import org.likelion.zagabi.Domain.Account.Dto.Response.getTokenForPwResponseDto;
 import org.likelion.zagabi.Domain.Account.Entity.SecurityQuestion;
 import org.likelion.zagabi.Domain.Account.Entity.User;
 import org.likelion.zagabi.Domain.Account.Jwt.Exception.SecurityCustomException;
@@ -89,17 +91,14 @@ public class AccountService {
     }
 
 
-    public void forgotPassword(ForgotPwRequestDto requestDto) {
+    public ForgotPwResponseDto forgotPassword(ForgotPwRequestDto requestDto) {
         User user = userJpaRepository.findByEmail(requestDto.email())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         if(!requestDto.email().equals(user.getEmail())) {
             throw new IllegalArgumentException("입력하신 이메일이 일치하지 않습니다.");
         }
-
-        if(!requestDto.securityAnswer().equals(user.getSecurityAnswer())){
-            throw new IllegalArgumentException("입력하신 질문에 대답이 일치하지 않습니다.");
-        }
+        return ForgotPwResponseDto.from(user);
     }
 
     public void updatePassword(HttpServletRequest request, ChangePwRequestDto requestDto) {
@@ -149,6 +148,24 @@ public class AccountService {
         } catch (ExpiredJwtException e) {
             throw new SecurityCustomException(TokenErrorCode.TOKEN_EXPIRED);
         }
+    }
+    public getTokenForPwResponseDto getTokenForPw(getTokenForPwRequestDto requestDto) {
+        User user = userJpaRepository.findByEmail(requestDto.email())
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        if(!requestDto.email().equals(user.getEmail())) {
+            throw new IllegalArgumentException("입력하신 이메일이 일치하지 않습니다.");
+        }
+        if(!requestDto.securityAnswer().equals(user.getSecurityAnswer())) {
+            throw new IllegalArgumentException("입력하신 답변이 일치하지 않습니다.");
+        }
+        CustomUserDetails customUserDetails = new CustomUserDetails(user);
+
+        // 토큰 생성
+        String accessToken = jwtProvider.createJwtAccessToken(customUserDetails);
+
+        // 반환할 DTO 생성 및 반환
+        return getTokenForPwResponseDto.from(accessToken);
+
     }
 
 }
