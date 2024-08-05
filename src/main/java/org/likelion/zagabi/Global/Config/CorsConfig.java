@@ -28,6 +28,9 @@ public class CorsConfig implements WebMvcConfigurer {
         ArrayList<String> allowedHttpMethods = new ArrayList<>();
         allowedHttpMethods.add("GET");
         allowedHttpMethods.add("POST");
+        allowedHttpMethods.add("PUT");
+        allowedHttpMethods.add("PATCH");
+        allowedHttpMethods.add("DELETE");
 
         configuration.setAllowedOriginPatterns(allowedOriginPatterns); // setAllowedOrigins를 setAllowedOriginPatterns로 변경
         configuration.setAllowedMethods(allowedHttpMethods);
