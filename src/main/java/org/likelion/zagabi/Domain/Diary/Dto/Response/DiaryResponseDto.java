@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 
 @Builder
 public record DiaryResponseDto(
+        @Schema(description = "일기 id", example = "1")
+        Long diaryId,
+
         @Schema(description = "일기 제목", example = "오늘의 일기")
         String title,
 
@@ -32,6 +35,7 @@ public record DiaryResponseDto(
 ) {
     public static DiaryResponseDto from(Diary diary) {
         return DiaryResponseDto.builder()
+                .diaryId(diary.getId())
                 .title(diary.getTitle())
                 .mainText(diary.getMainText())
                 .mood(diary.getMood())
