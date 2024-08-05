@@ -14,6 +14,7 @@ import org.likelion.zagabi.Domain.Account.Jwt.Exception.TokenErrorCode;
 import org.likelion.zagabi.Domain.Account.Jwt.Util.JwtProvider;
 import org.likelion.zagabi.Domain.Account.Service.AccountQueryService;
 import org.likelion.zagabi.Domain.Account.Service.AccountService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,5 +88,19 @@ public class AccountController {
     public ResponseEntity<List<SecurityQuestionResponseDto>> getSecurityQuestions() {
         List<SecurityQuestionResponseDto> responseDtos = accountQueryService.getSecurityQuestions();
         return ResponseEntity.ok(responseDtos);
+    }
+
+    @PostMapping("/email/sendemail")
+    public ResponseEntity<?> sendEmail(@RequestParam("email") String email){
+        accountService.sendCodeToEmail(email);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/email/verifyemail")
+    public ResponseEntity<?> verifyEmail(@RequestParam("email") String email, @RequestParam("code") String code){
+        accountService.verifiedCode(email, code);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 }
