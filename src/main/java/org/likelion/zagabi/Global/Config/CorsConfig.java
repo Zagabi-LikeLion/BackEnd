@@ -23,6 +23,8 @@ public class CorsConfig implements WebMvcConfigurer {
         allowedOriginPatterns.add("http://127.0.0.1:5500");
         allowedOriginPatterns.add("http://127.0.0.1:5000");
         allowedOriginPatterns.add("http://127.0.0.1:5001");
+        allowedOriginPatterns.add("http://zagabi.shop");
+        allowedOriginPatterns.add("http://www.zagabi.shop");
 
 
         ArrayList<String> allowedHttpMethods = new ArrayList<>();
